@@ -1,0 +1,223 @@
+/**********Licence MIT-X11 -----
+Le 13/08/2015 / 
+Rédaction Karim Nadji dans le cadre du Stage MIAGE L3, UJF Grenoble 1, sous l'autorité du service communication de la ville de Crolles.
+**********************/
+
+
+<!!!!! -------- Avant d'installer les modules, Wampserveur..., vérifier la version 32 ou 64 bits de votre ordinateur, 
+les fichiers à télécharger sont différents en fonction de cette configuration ---!!!!!>
+
+
+
+--------------------------------------------------------------------------------------------
+
+Sommaire
+
+I) WampServer :
+                1 - Apache
+                
+                               1.1 Version 
+                               1.2 Configuration
+                               1.2.1 Modules 
+                               1.2.1.1 Nom Module, Caractéristique, proédure d'instalation
+                               
+                2 - Php
+                
+                               2.1 Version 
+                                2.2 Configuration
+                               2.2.1 Modules 
+                               2.2.1.1 Nom Module, Caractéristique, proédure d'instalation
+                               
+                3 - Mysql             
+                
+                               3.1 Version 
+                               3.2 Configuration
+                               3.2.1 Modules 
+                               3.2.1.1 Nom Module, Caractéristique, proédure d'instalation
+                               
+                4 - SendMail
+                
+                               4.1 Version 
+                               4.2 Configuration
+                               4.2.1 Modules 
+                               4.2.1.1 Nom Module, Caractéristique, procédure d'installation
+
+---------------------------------------------------------------------------------------
+
+L'ensemble des fichiers et/ou dossiers nécessaires au fonctionnement du site sont présent dans le dossier tools_load
+à la racine du site : C:\wamp\www\"nom du site"\tools_load.
+Ces derniers sont classés par version d'ordinateur (64 - 32 bits) puis applicatifs
+
+Partie 1
+--
+
+                1 - Apache
+                
+                                               1.1 Version :
+                                                               Apache  2.4.9.
+                                                               
+                                               1.2 Configuration :
+                                               
+                                               Les fichiers nécessaires sont disponibles dans le dossier 32 ou 64 bit /apache
+                                               
+                                                               1.2.1 Modules 
+                                                               
+                                                               1.2.1.1 :
+                                                               
+                                                               // -> Rewrite Module  : 
+                                                               
+                                                               Caractéristique -> Nécessaire pour activer les redirections
+                                                               
+                                                               Procédure d'installation :
+                                                               
+                                                               A/ dans le fichier : C:\wamp\bin\apache\apache2.4.9\conf\httpd.conf ou via console wamp, 
+                                                                              vérifier que la ligne LoadModule rewrite_module modules/mod_rewrite.so n'est pas commentée (pas de # devant)
+                                                                              
+                                                               B/ wamp redémarre automatiquement.
+                                                               
+                                                               
+                                                               // -> SSPI Module  : mod_authnz_sspi.so && sspipkgs
+                                                               
+                                                                              Caractéristique -> utile pour l'authentification SSPI avec Ldap (identification de type Agent dans notre dev.).
+                                                                              
+                                                                              Procédure d'installation : 
+                                                                              
+                                                                              A/ Copier le fichier  
+                                                                              en 32 bit : C:\wamp\www\"nom du site"\tools_load\32bits\apache\mod_authnz_sspi-0.1.0a1-2.4.x-x86-r2\Apache24\bin\sspipkgs
+                                                                              en 64 bit  : C:\wamp\www\"nom du site"\tools_load\64bits\apache\mod_authnz_sspi-0.1.0a1-2.4.x-x64-r2\Apache24\bin\sspipkgs
+                                                                              
+                                                                              B/ Coller le fichier dans : C:\wamp\bin\apache\apache2.4.9\bin
+                                                                              
+                                                                              C/ Copier le fichier 
+                                                                              en 32 bit : C:\wamp\www\"nom du site"\tools_load\32bits\apache\mod_authnz_sspi-0.1.0a1-2.4.x-x86-r2\Apache24\modules\mod_authnz_sspi.so
+                                                                              en 64 bit  : C:\wamp\www\"nom du site"\tools_load\64bits\apache\mod_authnz_sspi-0.1.0a1-2.4.x-x64-r2\Apache24\modules\mod_authnz_sspi.so
+                                                                              
+                                                                              D/ Coller le fichier dans : C:\wamp\bin\apache\apache2.4.9\modules
+                                                                              
+                                                                              E/ Copier la chaine de caractères  "LoadModule authnz_sspi_module modules/mod_authnz_sspi.so"
+                                                                              dans le fichier : C:\wamp\bin\apache\apache2.4.9\conf\httpd.conf ou via console wamp, 
+                                                                              vérifier que les lignes LoadModule authn_core_module modules/mod_authn_core.so  et LoadModule authz_core_module modules/mod_authz_core.so
+                                                                              ne sont pas commentées (pas de # devant)
+                                                                              
+                                                                              E/ Fermer wamp et redémarrer wamp ! IMPORTANT !.
+                                                                              
+                                                                              
+                                                               // -> LDAP Extension  : 
+                                                               
+                                                                              Caractéristique -> utile pour l'authentification via Ldap (identification de type Agent dans notre dev.).
+                                                                              
+                                                                              Procédure d'installation : 
+                                                                              
+                                                                              A/ dans le fichier : C:\wamp\bin\apache\apache2.4.9\conf\httpd.conf , 
+                                                                              activer LoadModule ldap_module modules/mod_ldap.so
+                                                                              
+                                                                              B/ Fermer wamp et redémarrer wamp ! IMPORTANT !.
+                                                                              
+                                                                              C/ dans le fichier : C:\wamp\bin\apache\apache2.4.9\conf\httpd.conf , 
+                                                                              activer LoadModule authnz_ldap_module modules/mod_authnz_ldap.so
+                                                                              wamp doit redémarrer tout seul et être vert.
+                                                                              
+                                                                              D/ Copier le fichier C:\wamp\bin\php\php5.5.12\libsasl.dll puis Coller dans C:\wamp\bin\apache\apache2.4.9\bin
+                                                                              
+                                                                              
+                                                                                              ( Option non utilisée 
+                                                                                              // -> MYSQL APACHE Auth Module : mysql-connector-odbc-3.51.30
+                                                                                                                             -> pour etablir une connexion avec la base de donnée Mysql, est pouvoir faire l'auth via Apache.
+                                                                              
+                                                                                                                                             -> Config : 
+                                                                                                                                                                            - Allez dans Panneaux de configuration\Outils d’administration\Sources de données (ODBC)
+                                                                                                                                                                            - l'onglet Sources de donnée système.
+                                                                                                                                                                            - Ajouter.
+                                                                                                                                                                            - Mysql ODBC 3.51 Driver.
+                                                                                                                                                                            - configurer votre BDD.
+                                                                                                                                                                            
+                                                                                                                                             -> config httpd.conf :
+                                                                                                                                                                DBDriver odbc
+                                                                                                                                                                DBDParams "DATASOURCE = nom de votre data source"
+                                                                                                                                                                DBDKeep 10 
+                                                                                                                                                                DBDMax 20 
+                                                                                                                                                                DBDMin 10
+
+                                                                                                                                                             <FilesMatch "page.php">
+                                                                                                                                                                            Require valid-user
+                                                                                                                                                                            ErrorDocument 401 "erreur.php"
+                                                                                                                                                                            AuthFormProvider dbd
+                                                                                                                                                                            AuthType form
+                                                                                                                                                                            AuthName Attention!!
+                                                                                                                                                                            # la requête SQL de mod_authn_dbd pour authentifier un utilisateur
+                                                                                                                                                                            AuthDBDUserPWQuery \
+                                                                                                                                                                            "SELECT password_user FROM user_connect_std WHERE email_user = %s"
+                                                                                                                                                             </FilesMatch>
+                                                                                              )
+                                                                                                              
+                                                                                                              
+--
+                                                                              
+                2- PHP
+																Remarque : Les fichiers htaccess présent à la racine du site et dans le dossier "auth_sspi" contiennent des redirections et des parametres de configuration .
+																				
+																1.1 Version :
+                                                                              Php  5.5.12
+                                                                              
+                                                               1.2 Configuration : RAS
+                                                               
+                                                                              1.2.1 Modules 
+                                                                              
+                                                                              // -> Extensions Php 
+                                                                              
+                                                                              A/ Ouvrir PHP extensions via la console de wamp ( Clic gauche sur icone puis PHP > PHP EXTENSIONS)
+                                                                              
+                                                                              B/ Vérifier que php_ldap (utile pour ldap), php_openssl et phpsocket (utiles pour l'envoi de mail) sont activés
+                                                                              
+                                                                              
+
+--
+                                                                              
+                3- SENDMAIL
+                               
+                                                               1.1 Version : La version actuelle  (cf date de création du document en haut de page) de SENDMAIL est identique en 32 et 64  bit
+                                                                              
+                                                               1.2 Configuration : RAS
+                                                               
+                                                                              1.2.1 Modules 
+                                                                              
+                                                                              // -> SEND MAIL  : 
+                                                               
+                                                                              Caractéristique -> permet l'envoi automatique de mail sans passer par une messagerie et vers une messagerie.
+                                                                              
+                                                                              Procédure d'installation : 
+                                                                              
+                                                                              A/ Copier le dossier  décompressé
+                                                                              en 32 bit : C:\wamp\www\"nom du site"\tools_load\32bits\sendmail
+                                                                              en 64 bit  : C:\wamp\www\"nom du site"\tools_load\64bits\sendmail
+                                                                              
+                                                                              B/ Coller le dossier dans : C:\wamp\bin\
+                                                                              
+                                                                              C/ Ouvrir le fichier : C:\wamp\bin\sendmail\sendmail.ini et insérer la configuration suivante pour un usage en local à modifier si mise en ligne:
+                                                                                                              
+                                                                                                              smtp_server=mail.test.fr
+                                                                                                              smtp_port=586
+                                                                                                              default_domain=localhost
+                                                                                                              auth_username=test@live.fr
+                                                                                                              auth_password=********
+                                                                                                              hostname=localhost
+                                               
+                                               
+                                                                              D/ Ouvrir le fichier : C:\wamp\bin\php\php5.5.12\php.ini et insérer la configuration suivante dans [mail function] pour un usage en local à modifier si mise en ligne:
+                                                                                                                                             
+                                                                                                                                             SMTP = localhost
+                                                                                                                                             smtp_port = 25
+                                                                                                                                             sendmail_path = "le chemain vers votre -> sendmail.exe -t -i"
+                                                                                                                                             
+                                                                                                                                             
+                                                                              
+                                                                              E/ Ouvrir le fichier : C:\wamp\bin\apache2.4.9\bin\php.ini et insérer la configuration suivante dans [mail function] pour un usage en local à modifier si mise en ligne:
+                                                                                                                                             
+                                                                                                                                             (code identique de D ci-dessus, c'est normal)
+                                                                                                                                             
+                                                                                                                                             SMTP = localhost
+                                                                                                                                             smtp_port = 25
+                                                                                                                                             sendmail_path = "le chemain vers votre -> sendmail.exe -t -i"
+                                                                                                                                             
+                                                                              
+                                                                              F/ Fermer wamp et redémarrer wamp ! IMPORTANT !.

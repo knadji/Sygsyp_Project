@@ -1,0 +1,12 @@
+    Order allow,deny
+    Allow from all
+	
+	Options +FollowSymlinks
+	RewriteEngine on
+	RewriteCond %{QUERY_STRING} ^([0-9a-z]+)$
+	RewriteRule ^index\.php$ /Crolles_Web/index.php? [NC,R=301,L]
+
+	# Interdire l'accès direct a un dossier du site
+	Options -Indexes
+	ErrorDocument 403 "http://localhost/Crolles_Web/index.php"
+	
